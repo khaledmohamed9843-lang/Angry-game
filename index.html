@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تنفس مع آدم - لعبة التنفس للتخلص من الغضب</title>
+    <style>
+        /* تنسيقات عامة */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* رأس الصفحة */
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #4a6fa5;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+        
+        .subtitle {
+            color: #6b8cbc;
+            font-size: 1.2rem;
+        }
+        
+        /* منطقة اللعبة الرئيسية */
+        .game-area {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 30px;
+        }
+        
+        /* منطقة الطفل */
+        .child-container {
+            position: relative;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* margin-bottom: 30px; */
+        }
+        
+        .child-image {
+            width: 300px;
+            height: 300px;
+            /* border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); */
+            transition: transform 0.5s ease;
+        }
+        
+        .child-image.angry {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        /* دائرة العد */
+        .count-circle {
+            position: absolute;
+            left: 10%;
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #a8d8ea 0%, #7bb8d8 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border: 5px solid #fff;
+        }
+        
+        .count-number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #4a6fa5;
+        }
+        
+        /* زر البدء */
+        .start-button {
+            background: linear-gradient(135deg, #6b8cbc 0%, #4a6fa5 100%);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(74, 111, 165, 0.3);
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+        
+        .start-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(74, 111, 165, 0.4);
+        }
+        
+        .start-button:active {
+            transform: translateY(1px);
+        }
+        
+        /* شاشة النجاح */
+        .success-screen {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .stars {
+            font-size: 4rem;
+            color: gold;
+            margin-bottom: 20px;
+            animation: bounce 1s infinite alternate;
+        }
+        
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+        
+        .success-message {
+            font-size: 1.5rem;
+            color: #4a6fa5;
+            margin-bottom: 20px;
+        }
+        
+        .reset-button {
+            background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(255, 179, 71, 0.3);
+            transition: all 0.3s ease;
+        }
+        
+        .reset-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(255, 179, 71, 0.4);
+        }
+        
+        /* توجيهات التنفس */
+        .breathing-instruction {
+            font-size: 1.5rem;
+            color: #4a6fa5;
+            margin-top: 20px;
+            text-align: center;
+            min-height: 40px;
+        }
+        
+        /* التجاوب مع الشاشات المختلفة */
+        @media (max-width: 768px) {
+            .child-image {
+                width: 250px;
+                height: 250px;
+            }
+            
+            .count-circle {
+                width: 100px;
+                height: 100px;
+                left: 5%;
+            }
+            
+            .count-number {
+                font-size: 2.5rem;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .child-image {
+                width: 200px;
+                height: 200px;
+            }
+            
+            .count-circle {
+                width: 80px;
+                height: 80px;
+                left: 2%;
+            }
+            
+            .count-number {
+                font-size: 2rem;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .start-button {
+                padding: 12px 30px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>تنفس مع آدم</h1>
+            <!-- <p class="subtitle">لعبة التنفس للتخلص من الغضب</p> -->
+        </header>
+        
+        <div class="game-area">
+            <div class="child-container">
+                <img src="angry.png" alt="آدم غاضب" class="child-image angry" id="childImage">
+                <div class="count-circle">
+                    <div class="count-number" id="countNumber">0</div>
+                </div>
+            </div>
+            
+            <button class="start-button" id="startButton">ماذا تفعل عندما تكون غاضب؟</button>
+            
+            <div class="breathing-instruction" id="breathingInstruction"></div>
+            
+            <div class="success-screen" id="successScreen">
+                <div class="stars">★★★★★</div>
+                <p class="success-message">أحسنت! لقد تخلصت من غضبك بنجاح</p>
+                <button class="reset-button" id="resetButton">ابدأ من جديد</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const startButton = document.getElementById('startButton');
+            const resetButton = document.getElementById('resetButton');
+            const countNumber = document.getElementById('countNumber');
+            const childImage = document.getElementById('childImage');
+            const breathingInstruction = document.getElementById('breathingInstruction');
+            const successScreen = document.getElementById('successScreen');
+            
+            let currentNumber = 0;
+            let isBreathingIn = true;
+            let breathingInterval;
+            
+            // دالة بدء اللعبة
+            startButton.addEventListener('click', startGame);
+            
+            // دالة إعادة اللعبة
+            resetButton.addEventListener('click', resetGame);
+            
+            function startGame() {
+    startButton.style.display = 'none';
+    currentNumber = 0;
+    isBreathingIn = true;
+    countNumber.textContent = currentNumber;
+    breathingInstruction.textContent = "استعد للبدء...";
+
+    // 🎵 إنشاء وتشغيل الصوت
+    const audio = new Audio('angry.mp3'); // ضع اسم ملف الصوت هنا
+    audio.play();
+
+    // بدء العد التنازلي
+    setTimeout(() => {
+        breathingInstruction.textContent = "خذ نفسًا عميقًا...";
+        startBreathingCycle();
+    }, 1000);
+}
+
+            
+            function startBreathingCycle() {
+    let count = 3;
+    countNumber.textContent = 0;
+    currentNumber = 0;
+    isBreathingIn = true;
+
+    breathingInstruction.textContent = "خذ نفسًا عميقًا...";
+
+    breathingInterval = setInterval(() => {
+        currentNumber++;
+        countNumber.textContent = currentNumber;
+
+        if (isBreathingIn) {
+            breathingInstruction.textContent = "أخرج الزفير ببطء...";
+        } else {
+            breathingInstruction.textContent = "خذ نفسًا عميقًا...";
+        }
+
+        isBreathingIn = !isBreathingIn;
+
+        if (currentNumber >= 10) {
+            clearInterval(breathingInterval);
+            breathingInstruction.style.display = 'none';
+
+            endGame();
+        }
+    }, 3000); // every 3 seconds
+}
+
+            
+            function endGame() {
+                clearInterval(breathingInterval);
+                
+                // تغيير صورة الطفل إلى صورة مبتسمة
+                childImage.src = "happy.png";
+                childImage.classList.remove('angry');
+                
+                // إظهار شاشة النجاح
+                successScreen.style.display = 'flex';
+                
+                // تشغيل صوت تحفيزي (محاكاة)
+                playMotivationalSound();
+            }
+            
+            function resetGame() {
+                // إعادة تعيين كل شيء
+                clearInterval(breathingInterval);
+                currentNumber = 0;
+                countNumber.textContent = '0';
+                breathingInstruction.textContent = '';
+                successScreen.style.display = 'none';
+                startButton.style.display = 'block';
+                
+                // إعادة صورة الطفل الغاضب
+                childImage.src = "angry.png";
+                childImage.classList.add('angry');
+            }
+            
+            function playMotivationalSound() {
+                // إنشاء عنصر صوتي وتشغيل ملف clap.mp3
+                const audio = new Audio('clap.mp3');
+                
+                // محاولة تشغيل الصوت
+                audio.play().catch(error => {
+                    console.log('خطأ في تشغيل الصوت:', error);
+                    // إذا فشل تشغيل الملف، استخدم الصوت البديل
+                    
+                });
+                
+                // إضافة مستمع للحدث عند انتهاء الصوت
+                audio.addEventListener('ended', function() {
+                    console.log('انتهى صوت التصفيق');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
