@@ -14,7 +14,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            background: rgb(238, 238, 182);
             color: #333;
             min-height: 100vh;
             display: flex;
@@ -300,7 +300,7 @@
 }
 
             
-            function startBreathingCycle() {
+           function startBreathingCycle() {
     let count = 3;
     countNumber.textContent = 0;
     currentNumber = 0;
@@ -311,6 +311,12 @@
     breathingInterval = setInterval(() => {
         currentNumber++;
         countNumber.textContent = currentNumber;
+
+        // Play the sound corresponding to the current number
+        const audio = new Audio(`${currentNumber}.m4a`);
+        audio.play().catch(error => {
+            console.log('Error playing audio:', error);
+        });
 
         if (isBreathingIn) {
             breathingInstruction.textContent = "أخرج الزفير ببطء...";
@@ -328,6 +334,7 @@
         }
     }, 3000); // every 3 seconds
 }
+
 
             
             function endGame() {
