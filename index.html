@@ -289,9 +289,15 @@
     breathingInstruction.textContent = "استعد للبدء...";
 
     // 🎵 إنشاء وتشغيل الصوت
-    const audio = new Audio('angry.mp3'); // ضع اسم ملف الصوت هنا
-    audio.play();
+    // const audio = new Audio('angry.mp3'); // ضع اسم ملف الصوت هنا
+    // audio.play();
 
+    const audio1 = new Audio('ins.mp3'); // First audio
+     const audio2 = new Audio('angry.mp3');  // Second audio
+     audio1.play();
+     audio1.addEventListener('ended', () => {
+  audio2.play();
+});
     // بدء العد التنازلي
     setTimeout(() => {
         breathingInstruction.textContent = "خذ نفسًا عميقًا...";
