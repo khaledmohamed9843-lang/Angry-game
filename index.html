@@ -299,10 +299,13 @@
   audio2.play();
 });
     // بدء العد التنازلي
-    setTimeout(() => {
+                audio2.addEventListener('ended',() =>{
+                    setTimeout(() => {
         breathingInstruction.textContent = "خذ نفسًا عميقًا...";
         startBreathingCycle();
     }, 1000);
+                });
+    
 }
 
             
@@ -391,3 +394,4 @@
     </script>
 </body>
 </html>
+
